@@ -50,9 +50,9 @@ class Repository extends ControlPanelApiController
                 return false;
             }
             $store = new ArikaimStore();
-            $accessKey = $store->getPackageKey($reposioryName);
-
-            $repository = $packageManager->getRepository($package,$accessKey);
+            $accessKey = $store->getPackageKey($reposioryName);          
+            $repository = ($packageManager->hasPackage($package) == true) ? $packageManager->getRepository($package,$accessKey) : null;
+            
             if (empty($repository) == true) {               
                 $repository = $packageManager->createRepository($reposioryName,$accessKey,$reposioryType);
             }
