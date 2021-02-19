@@ -116,7 +116,6 @@ class Component extends ApiController
      */
     public function load(string $name, array $params = [], ?string $language)
     {   
-        $params['current_path'] = $this->get('options')->get('current.path','');
         $component = $this->get('page')->createHtmlComponent($name,$params,$language,true);
         
         if (\is_object($component) == false) {          

@@ -76,9 +76,8 @@ class Page extends ApiController
      */
     public function loadPageProperties($request, $response, $data)
     {       
-        $result['properties'] = [
-            'name'              => $this->get('options')->get('current.page'),            
-            'language'          => $this->getPageLanguage($data),       
+        $result['properties'] = [      
+            'language'          => $this->getPageLanguage($data),      
             'site_url'          => Url::BASE_URL
         ];
 
