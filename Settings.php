@@ -42,7 +42,43 @@ class Settings extends ControlPanelApiController
         $this->get('config')->setBooleanValue('settings/disableInstallPage',$installPage);
         // save and reload config file
         $result = $this->get('config')->save();
+        $this->get('cache')->clear();
+        $this->get('config')->reloadConfig();      
+
         $this->setResponse($result,'settings.save','errors.settings.save');
-        $this->get('cache')->clear();        
+    }
+
+    /**
+     * Update setting option vars
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return Psr\Http\Message\ResponseInterface
+     */
+    public function updateOptionController($request, $response, $data)
+    {
+        $key = $data->getString('key',null);
+        $value = $data->getString('value',null);
+        $type = $data->getString('type',null);
+
+        if ($this->get('config')->hasWriteAccess($key) == false) {
+            $this->error('access.denied');
+            return false;
+        }
+
+        $this->get('cache')->clear();
+        if ($type == 'boolean') {
+            $this->get('config')->setBooleanValue($key,$value);
+        } else {
+            $this->get('config')->setValue($key,$value);
+        }
+       
+        // save and reload config file
+        $result = $this->get('config')->save();
+        $this->get('cache')->clear();
+        $this->get('config')->reloadConfig();     
+
+        $this->setResponse($result,'settings.save','errors.settings.save');       
     }
 }

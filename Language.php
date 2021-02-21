@@ -153,14 +153,18 @@ class Language extends ControlPanelApiController
     {
         $this->onDataValid(function($data) {           
             $uuid = $data->get('uuid');
-            $model =Model::Language()->findById($uuid);
+            $model = Model::Language()->findById($uuid);
             if (\is_object($model) == false) {
                 $this->error('errors.language.default');
                 return false;
             }
             
-            $result = $this->get('options')->set('default.language',$model->code,true);
-       
+            $this->get('cache')->clear();
+            $this->get('config')->setValue('settings/defaultLanguage',$model->code);
+            // save and reload config file
+            $result = $this->get('config')->save();
+            $this->get('cache')->clear();
+
             $this->setResponse($result,function() use($uuid) {
                 $this
                     ->message('language.default')
