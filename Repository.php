@@ -72,7 +72,7 @@ class Repository extends ControlPanelApiController
 
             $result = $repository->install();
             
-            $this->setResponse($result,function() use($package,$type) {            
+            $this->setResponse($result,function() use($package,$type) {   
                 $this
                     ->message($type . '.download')
                     ->field('type',$type)   
