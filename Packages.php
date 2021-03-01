@@ -88,14 +88,14 @@ class Packages extends ControlPanelApiController
             $require = $package->getRequire();
             $composerPackages = $require->get('composer',[]);
             
-            foreach ($composerPackages as $compsoerPackage) {
-                if (Composer::isInstalled($compsoerPackage) === false) {
-                    Composer::requirePackage($compsoerPackage);     
+            foreach ($composerPackages as $packageName) {
+                if (Composer::isInstalled($packageName) === false) {
+                    Composer::requirePackage($packageName);     
                 } else {
-                    Composer::updatePackage($compsoerPackage);     
+                    Composer::updatePackage($packageName);     
                 }                         
             }    
-            $result = Composer::isInstalled($composerPackages);
+            $result = (bool)Composer::isInstalled($composerPackages);
         
             $this->setResponse($result,function() use($name,$type) {                  
                 $this

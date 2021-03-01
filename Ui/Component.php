@@ -146,6 +146,7 @@ class Component extends ApiController
             'css'        => Arrays::arrayColumns($files['css'],['url','params','component_name']),
             'js'         => Arrays::arrayColumns($files['js'],['url','params','component_name']),
             'components' => $this->get('view')->getIncludedComponents(),
+            'type'       => $component->getComponentType(),
             'html'       => $component->getHtmlCode()           
         ];
   
