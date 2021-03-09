@@ -38,7 +38,7 @@ class CronApi extends ControlPanelApiController
     public function installCronController($request, $response, $data)
     {         
         $cron = new Cron();
-        $result = ($cron->isInstalled() == false) ? $cron->install() : true;
+        $result = ($cron->isRunning() == false) ? $cron->run() : true;
         
         $this->setResponse($result,'cron.install','errors.cron.install');              
     }
@@ -73,7 +73,7 @@ class CronApi extends ControlPanelApiController
     public function unInstallCronController($request, $response, $data)
     {         
         $cron = new Cron();
-        $result = $cron->unInstall();
+        $result = $cron->stop();
 
         $this->setResponse($result,'cron.uninstall','errors.cron.uninstall');               
     }
