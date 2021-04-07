@@ -92,6 +92,9 @@ class Component extends ApiController
         $this->get('page')->setLanguage($language);
         $type = $params['component_type'] ?? null;
 
+        // access
+        $this->get('access')->withProvider('session');
+        
         return $this->load($data['name'],$params,$language,$type);
     }
 
