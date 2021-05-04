@@ -62,6 +62,9 @@ class Install extends ApiController
             }
             // clear cache
             $this->get('cache')->clear();
+            
+            // reload config
+            $this->get('db')->reloadConfig(false);
 
             $result = $this->get('db')->testConnection($this->get('config')->get('db'));
             if ($result == false) {                
