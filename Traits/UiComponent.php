@@ -23,7 +23,7 @@ trait UiComponent
      * @param array $params
      * @param string $language
      * @param string|null $type
-     * @return JSON 
+     * @return mixed 
      */
     public function load(string $name, array $params = [], string $language, ?string $type = null)
     {   
