@@ -63,14 +63,15 @@ class Install extends ApiController
             // clear cache
             $this->get('cache')->clear();
             
+            // relod config file
+            $this->get('config')->reloadConfig(false);
+
             $result = $this->get('db')->testConnection($this->get('config')->get('db'));
             if ($result == false) {                
                 $this->error('Not valid database connection username or password.');
                 return; 
             }
-            // relod config file
-            $this->get('config')->reloadConfig(false);
-
+          
             // do install        
             $this->initTaskProgress();
 
