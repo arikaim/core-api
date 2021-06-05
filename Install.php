@@ -68,7 +68,9 @@ class Install extends ApiController
                 $this->error('Not valid database connection username or password.');
                 return; 
             }
-           
+            // relod config file
+            $this->get('config')->reloadConfig(false);
+
             // do install        
             $this->initTaskProgress();
 
