@@ -28,7 +28,7 @@ class SessionApi extends ApiController
     public function getInfo($request, $response, $data) 
     {           
         $sessionInfo = Session::getParams();   
-        $sessionInfo['recreate'] = $this->get('options')->get('session.recreation.interval');
+        $sessionInfo['recreate'] = $this->get('config')['settings']['sessionInterval'] ?? 0;
         
         return $this->setResult($sessionInfo)->getResponse();       
     }
@@ -47,7 +47,7 @@ class SessionApi extends ApiController
         Session::recrete($lifetime);
 
         $sessionInfo = Session::getParams();  
-        $sessionInfo['recreate'] = $this->get('options')->get('session.recreation.interval');     
+        $sessionInfo['recreate'] = $this->get('config')['settings']['sessionInterval'] ?? 0;     
         
         return $this->setResult($sessionInfo)->getResponse();       
     }

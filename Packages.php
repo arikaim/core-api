@@ -302,18 +302,12 @@ class Packages extends ControlPanelApiController
         $this->onDataValid(function($data) { 
             $name = $data['name'];
             $libraryParams = $data->get('params',[]);
-            $result = [];
-        
-            foreach ($libraryParams as $item) {
-                $result[$item['name']] = $item['value'];
-            }
+            
+            $packageManager = $this->get('packages')->create('library');
+            $package = $packageManager->createPackage($name);
 
-            $params = $this->get('options')->get('library.params',[]);
-            $params[$name] = $result;
-            $result = $this->get('options')->set('library.params',$params);
-            
-            $this->get('cache')->clear();
-            
+            $result = $package->saveLibraryParams($libraryParams);
+    
             $this->setResponse($result,function() use($name) {                        
                 $this
                     ->message('library.params')

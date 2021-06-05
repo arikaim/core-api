@@ -28,6 +28,7 @@ class Page extends ApiController
     {        
         $libraryName = $data->get('name',null);
         $data = $this->get('page')->getLibraryDetails($libraryName);
+        
         $result = [
             'name'        => $libraryName,
             'css'         => $data['files']['css'] ?? [],

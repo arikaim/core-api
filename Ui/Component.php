@@ -10,13 +10,15 @@
 namespace Arikaim\Core\Api\Ui;
 
 use Arikaim\Core\Controllers\ApiController;
-use Arikaim\Core\Collection\Arrays;
+use Arikaim\Core\Api\Traits\UiComponent;
 
 /**
  * Component Api controller
 */
 class Component extends ApiController
 {
+    use UiComponent;
+
     /**
      * Get html component properties
      *
@@ -96,55 +98,5 @@ class Component extends ApiController
         $this->get('access')->withProvider('session');
         
         return $this->load($data['name'],$params,$language,$type);
-    }
-
-    /**
-     * Load html component
-     *
-     * @param string $name
-     * @param array $params
-     * @param string $language
-     * @param string|null $type
-     * @return JSON 
-     */
-    public function load(string $name, array $params = [], string $language, ?string $type = null)
-    {   
-        $component = $this->get('page')->renderHtmlComponent($name,$params,$language,$type);
-    
-        if ($component->hasError() == true) {
-            $errorCode = $component->getError();   
-            if ($errorCode != 'NOT_VALID_COMPONENT') {
-                $this->setResultField('redirect',$component->getOption('redirect')); 
-            }
-            $error = $this->get('errors')->getError($errorCode,['full_component_name' => $name]);  
-            return $this->withError($error)->getResponse();          
-        }
-      
-        $files = $this->get('page')->getComponentsFiles();
-        
-        $result = [
-            'name'       => $component->getFullName(),
-            'css'        => Arrays::arrayColumns($files['css'],['url','params','component_name']),
-            'js'         => Arrays::arrayColumns($files['js'],['url','params','component_name']),
-            'components' => $this->get('page')->getIncludedComponents(),
-            'type'       => $component->getComponentType(),
-            'html'       => $component->getHtmlCode()           
-        ];
-  
-        return $this->setResult($result)->getResponse();        
-    }
-
-    /**
-     * Get header params
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @return array
-     */
-    private function getHeaderParams($request)
-    {       
-        $params = $request->getHeader('Params');
-        $headerParams = $params[0] ?? null;
-        
-        return (empty($headerParams) == false) ? \json_decode($headerParams,true) : [];         
     }
 }
