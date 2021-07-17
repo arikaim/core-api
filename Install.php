@@ -84,7 +84,8 @@ class Install extends ApiController
                     $this->clearResult();                   
                     $this->setResponse(false,'',$error);             
                     $this->sendProgressResponse();       
-                }
+                },
+                $this->get('config')->get('db')
             );   
             $this->clearResult();    
             $this->taskProgressEnd();
