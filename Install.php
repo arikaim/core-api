@@ -123,9 +123,7 @@ class Install extends ApiController
             );   
             $this->clearResult();    
             $this->taskProgressEnd();
-             
-            exit();
-
+            
             $this->setResponse($result,'Arikaim CMS was installed successfully.','Install Error');   
         });
         $data            
