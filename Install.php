@@ -22,6 +22,68 @@ class Install extends ApiController
     use TaskProgress;
 
     /**
+     * Prepare Arikaim install 
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return Psr\Http\Message\ResponseInterface
+    */
+    public function prepareController($request, $response, $data) 
+    {  
+        $this->onDataValid(function($data) {  
+            $disabled = $this->get('config')->getByPath('settings/disableInstallPage',false);
+            if ($disabled == true) {
+                $this->error('Install page is disabled.');
+                return;
+            }
+            $install = new SystemInstall();
+            // prepare folders
+            $result = $install->prepare();
+            // clear cache
+            $this->get('cache')->clear();
+         
+            $result = SystemInstall::setConfigFilesWritable();              
+            if ($result === false) {
+                $this->error('Config files is not writtable.');
+                return;
+            }
+
+            // save config file               
+            $this->get('config')->setValue('db/host',$data->get('host','localhost'));
+            $this->get('config')->setValue('db/username',$data->get('username'));
+            $this->get('config')->setValue('db/password',$data->get('password'));
+            $this->get('config')->setValue('db/database',$data->get('database')); 
+ 
+            $result = $this->get('config')->save();
+            if ($result === false) {
+                $this->error('Config file is not writtable.');
+                return;
+            }
+            // clear cache
+            $this->get('cache')->clear();
+             
+            // relod config file
+            $this->get('config')->reloadConfig(false);
+
+            $result = $this->get('db')->testConnection($this->get('config')->get('db'));
+            if ($result == false) {                
+                $this->error('Not valid database connection username or password.');
+                return; 
+            }
+
+            $result = $install->createDb($this->get('config')->getByPath('db/database'));
+
+            $this->setResponse($result,'Db created successfully.','Error prepare install.');      
+        });
+        $data
+            ->addRule('text:min=2','database')
+            ->addRule('text:min=2','username')
+            ->addRule('text:min=2','password')
+            ->validate();     
+    }
+
+    /**
      * Install Arikaim 
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
@@ -38,40 +100,12 @@ class Install extends ApiController
                 return;
             }
             $install = new SystemInstall();
-            $result = $install->prepare();
-
+        
             // clear cache
             $this->get('cache')->clear();
-         
-            $result = SystemInstall::setConfigFilesWritable();              
-            if ($result === false) {
-                $this->error('Config files is not writtable.');
-                return;
-            }
-            
-            // save config file               
-            $this->get('config')->setValue('db/host',$data->get('host','localhost'));
-            $this->get('config')->setValue('db/username',$data->get('username'));
-            $this->get('config')->setValue('db/password',$data->get('password'));
-            $this->get('config')->setValue('db/database',$data->get('database')); 
-
-            $result = $this->get('config')->save();
-            if ($result === false) {
-                $this->error('Config file is not writtable.');
-                return;
-            }
-            // clear cache
-            $this->get('cache')->clear();
-            
             // relod config file
             $this->get('config')->reloadConfig(false);
-
-            $result = $this->get('db')->testConnection($this->get('config')->get('db'));
-            if ($result == false) {                
-                $this->error('Not valid database connection username or password.');
-                return; 
-            }
-          
+            
             // do install        
             $this->initTaskProgress();
 
@@ -90,12 +124,11 @@ class Install extends ApiController
             $this->clearResult();    
             $this->taskProgressEnd();
              
+            exit();
+
             $this->setResponse($result,'Arikaim CMS was installed successfully.','Install Error');   
         });
-        $data
-            ->addRule('text:min=2','database')
-            ->addRule('text:min=2','username')
-            ->addRule('text:min=2','password')
+        $data            
             ->validate();      
     }
 
