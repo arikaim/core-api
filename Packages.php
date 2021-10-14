@@ -132,11 +132,11 @@ class Packages extends ControlPanelApiController
                 return;
             }
             
-            if ($runPostInstall == true) {
+            if ($runPostInstall == true) {               
                 // post install actions
                 $packageManager->postInstallPackage($name);
             }
-           
+            
             $this->setResponse($result,function() use($name,$type) {                  
                 $this
                     ->message($type . '.install')
@@ -193,7 +193,7 @@ class Packages extends ControlPanelApiController
                 // run post install actions
                 $package->postInstall();
             }
-           
+                      
             $this->setResponse($result,function() use($name,$type) {
                 $this
                     ->message($type . '.update')
