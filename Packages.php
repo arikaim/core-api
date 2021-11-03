@@ -126,6 +126,10 @@ class Packages extends ControlPanelApiController
 
             $packageManager = $this->get('packages')->create($type);
             $result = $packageManager->installPackage($name);
+            if (\is_string($result) == true) {
+                $this->error($result);
+                return false;
+            }
 
             if (\is_array($result) == true) {
                 $this->addErrors($result);
@@ -179,6 +183,10 @@ class Packages extends ControlPanelApiController
             $this->get('cache')->clear();
            
             $result = $package->install($primary);
+            if (\is_string($result) == true) {
+                $this->error($result);
+                return false;
+            }
 
             if ($primary == true) { 
                 $package->setPrimary();
