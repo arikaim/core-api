@@ -23,9 +23,10 @@ trait UiComponent
      * @param array $params
      * @param string $language
      * @param string|null $type
+     * @param array $options
      * @return mixed 
      */
-    public function load(string $name, array $params = [], string $language, ?string $type = null)
+    public function load(string $name, array $params = [], string $language, ?string $type = null, array $options = [])
     {   
         $component = $this->get('page')->renderHtmlComponent($name,$params,$language,$type);
      
@@ -41,14 +42,15 @@ trait UiComponent
         $files = $this->get('page')->getComponentsFiles();
         
         $result = [
-            'name'       => $component->getFullName(),
-            'css'        => Arrays::arrayColumns($files['css'],['url','params','component_name']),
-            'js'         => Arrays::arrayColumns($files['js'],['url','params','component_name']),
-            'components' => $this->get('page')->getIncludedComponents(),
-            'type'       => $component->getComponentType(),
-            'html'       => $component->getHtmlCode()           
+            'name'          => $component->getFullName(),
+            'component_id'  => $component->id,
+            'type'          => $component->getComponentType(),
+            'html'          => $component->getHtmlCode(),   
+            'css'           => Arrays::arrayColumns($files['css'],['url','params','component_name']),
+            'js'            => Arrays::arrayColumns($files['js'],['url','params','component_name','component_type','component_id']),                 
+            'components'    => $this->get('page')->getIncludedComponents()                   
         ];
-  
+        
         return $this->setResult($result)->getResponse();        
     }
 
