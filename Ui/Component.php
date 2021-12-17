@@ -84,8 +84,7 @@ class Component extends ApiController
     public function loadComponent($request, $response, $data)
     {       
         $params = $this->getParams($request);
-        $loadOtions = $data->get('params');
-
+       
         // get header params
         $headerParams = $this->getHeaderParams($request);
         $params = \array_merge($params,$headerParams);
@@ -98,8 +97,6 @@ class Component extends ApiController
         // access
         $this->get('access')->withProvider('session');
         
-        return $this->load($data['name'],$params,$language,$type,[
-            'inline_js' => ($loadOtions == 'inline-js')
-        ]);
+        return $this->load($data['name'],$params,$language,$type);
     }
 }
