@@ -37,7 +37,7 @@ class Users extends ApiController
      * @return Psr\Http\Message\ResponseInterface
      */
     public function adminLoginController($request, $response, $data) 
-    {
+    { 
         $this->onDataValid(function($data) {  
             $credentials = [
                 'user_name' => $data->get('user_name'),
@@ -59,8 +59,8 @@ class Users extends ApiController
             // update login date time
             $userId = $this->get('access')->getId();  
             Model::Users()->findById($userId)->updateLoginDate();
-            $this->setResponse($result,'login','errors.login'); 
 
+            $this->setResponse($result,'login','errors.login'); 
         });
         $data
             ->addRule('text:min=2','user_name')   

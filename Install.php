@@ -239,9 +239,6 @@ class Install extends ApiController
                 return;
             }
 
-            // clear cache
-            $this->get('cache')->clear();
-
             $this->initTaskProgress();
 
             // do post install actions
