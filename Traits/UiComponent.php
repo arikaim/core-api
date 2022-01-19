@@ -42,13 +42,14 @@ trait UiComponent
         $files = $this->get('page')->getComponentsFiles();
         
         $result = [
-            'name'          => $component->getFullName(),
-            'component_id'  => $component->id,
-            'type'          => $component->getComponentType(),
-            'html'          => $component->getHtmlCode(),   
-            'css'           => Arrays::arrayColumns($files['css'],['url','params','component_name']),
-            'js'            => Arrays::arrayColumns($files['js'],['url','params','component_name','component_type','component_id']),                 
-            'components'    => $this->get('page')->getIncludedComponents()                   
+            'name'                => $component->getFullName(),
+            'component_id'        => $component->id,
+            'type'                => $component->getComponentType(),
+            'html'                => $component->getHtmlCode(),   
+            'css'                 => Arrays::arrayColumns($files['css'],['url','params','component_name']),
+            'js'                  => Arrays::arrayColumns($files['js'],['url','params','component_name','component_type','component_id']),                 
+            'components'          => $this->get('page')->getIncludedComponents(),
+            'component_instances' => $this->get('page')->getComponentInstances()                   
         ];
         
         return $this->setResult($result)->getResponse();        
