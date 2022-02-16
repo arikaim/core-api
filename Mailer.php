@@ -45,10 +45,9 @@ class Mailer extends ControlPanelApiController
                 $this->setError('Control panel user email not valid!');
                 return;
             }       
-    
+            
             $result = $this->get('mailer')->create($componentName)
-                ->to($user['email'],'Admin User')
-                ->from($user['email'],'Arikaim CMS')               
+                ->to($user['email'],'Admin User')                         
                 ->send();
 
             $this->setResponse($result,'mailer.send',function() {
