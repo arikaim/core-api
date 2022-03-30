@@ -28,6 +28,7 @@ trait UiComponent
      */
     public function load(string $name, array $params = [], string $language, ?string $type = null, array $options = [])
     {   
+        $name = \urldecode($name);
         $component = $this->get('page')->renderHtmlComponent($name,$params,$language,$type);
      
         if ($component->hasError() == true) {
