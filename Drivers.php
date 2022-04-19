@@ -70,4 +70,23 @@ class Drivers extends ControlPanelApiController
         });
         $data->validate();         
     }
+
+    /**
+     * Uninstall driver
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return Psr\Http\Message\ResponseInterface
+     */
+    public function uninstallController($request, $response, $data)
+    {
+        $this->onDataValid(function($data) {    
+            $name = $data->get('name');
+            $result = $this->get('driver')->unInstall($name);
+        
+            $this->setResponse($result,'drivers.uninstall','errors.drivers.uninstall');    
+        });
+        $data->validate();  
+    }
 }
