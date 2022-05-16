@@ -29,12 +29,14 @@ class Component extends ApiController
      */
     public function componentProperties($request, $response, $data)
     {
+        $componentName = \urldecode($data['name']);
+
         $language = $this->getPageLanguage($data);
-        $component = $this->get('view')->createComponent($data['name'],$language,'json');
+        $component = $this->get('view')->createComponent($componentName,$language,'json');
 
         if ($component->hasError() == true) {
             $error = $component->getError();            
-            $error = $this->get('errors')->getError($error['code'],['full_component_name' => $data['name']]);                   
+            $error = $this->get('errors')->getError($error['code'],['full_component_name' => $componentName]);                   
             return $this->withError($error)->getResponse();  
         }
         
@@ -54,10 +56,11 @@ class Component extends ApiController
         // control panel only
         $this->requireControlPanelPermission();
 
+        $componentName = \urldecode($data['name']);
         $language = $this->getPageLanguage($data);
         $type = $data->get('component_type','arikaim'); 
        
-        $component = $this->get('view')->createComponent($data['name'],$language,$type);
+        $component = $this->get('view')->createComponent($componentName,$language,$type);
     
         if ($component->hasError() == true) {
             $error = $component->getError();
