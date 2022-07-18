@@ -36,19 +36,20 @@ class Drivers extends ControlPanelApiController
      */
     public function saveConfigController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {            
-            $driverName = $data->get('name');           
-            $data->offsetUnset('name');
+        $data
+            ->addRule('text:required','name')               
+            ->validate(true);      
 
-            $config = $this->get('driver')->getConfig($driverName);
-            // change config valus
+        $driverName = $data->get('name');           
+        $data->offsetUnset('name');
 
-            $config->setPropertyValues($data->toArray());
-            $result = $this->get('driver')->saveConfig($driverName,$config);
-        
-            $this->setResponse($result,'drivers.config','errors.drivers.config');
-        });
-        $data->validate();       
+        $config = $this->get('driver')->getConfig($driverName);
+        // change config valus
+
+        $config->setPropertyValues($data->toArray());
+        $result = $this->get('driver')->saveConfig($driverName,$config);
+    
+        $this->setResponse($result,'drivers.config','errors.drivers.config');
     }
 
     /**
@@ -61,14 +62,13 @@ class Drivers extends ControlPanelApiController
      */
     public function setStatusController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {    
-            $name = $data->get('name');
-            $status = $data->get('status');
-            $result = ($status == 0) ? $this->get('driver')->disable($name) : $this->get('driver')->enable($name);
-        
-            $this->setResponse($result,'drivers.enable','errors.drivers.enable');    
-        });
-        $data->validate();         
+        $data->validate(true);  
+
+        $name = $data->get('name');
+        $status = $data->get('status');
+        $result = ($status == 0) ? $this->get('driver')->disable($name) : $this->get('driver')->enable($name);
+    
+        $this->setResponse($result,'drivers.enable','errors.drivers.enable');                  
     }
 
     /**
@@ -81,12 +81,11 @@ class Drivers extends ControlPanelApiController
      */
     public function uninstallController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {    
-            $name = $data->get('name');
-            $result = $this->get('driver')->unInstall($name);
-        
-            $this->setResponse($result,'drivers.uninstall','errors.drivers.uninstall');    
-        });
-        $data->validate();  
+        $data->validate(true);  
+
+        $name = $data->get('name');
+        $result = $this->get('driver')->unInstall($name);
+    
+        $this->setResponse($result,'drivers.uninstall','errors.drivers.uninstall');    
     }
 }

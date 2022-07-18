@@ -35,30 +35,29 @@ class Options extends ControlPanelApiController
      * @return Psr\Http\Message\ResponseInterface
      */
     public function saveController($request, $response, $data) 
-    {                
-        $this->onDataValid(function($data) { 
-            $extensionName = $data->get('extension_name',null);          
-            $key = $data->get('key');
-            $value = $data->get('value');
-
-            $demoMode = $this->get('config')->getByPath('settings/demo_mode',false);
-            if ($demoMode == true) {
-                $this->error('Options save is disabled in demo mode!');
-                return;
-            }
-
-            $result = $this->get('options')->set($key,$value,$extensionName);
-
-            $this->setResponse($result,function() use($key,$value) {
-                $this
-                    ->message('options.save')
-                    ->field('key',$key)
-                    ->field('value',$value);
-            },'errors.options.save');          
-        });
+    {       
         $data
             ->addRule('text:min=2','key')
-            ->validate();      
+            ->validate(true);   
+
+        $extensionName = $data->get('extension_name',null);          
+        $key = $data->get('key');
+        $value = $data->get('value');
+
+        $demoMode = $this->get('config')->getByPath('settings/demo_mode',false);
+        if ($demoMode == true) {
+            $this->error('Options save is disabled in demo mode!');
+            return;
+        }
+
+        $result = $this->get('options')->set($key,$value,$extensionName);
+
+        $this->setResponse($result,function() use($key,$value) {
+            $this
+                ->message('options.save')
+                ->field('key',$key)
+                ->field('value',$value);
+        },'errors.options.save');          
     }
 
     /**
@@ -70,14 +69,13 @@ class Options extends ControlPanelApiController
      * @return Psr\Http\Message\ResponseInterface
      */
     public function getController($request, $response, $data) 
-    {                          
-        $this->onDataValid(function($data) { 
-            $value = $this->get('options')->get($data['key']);
-            $this->setResult($value);           
-        });
+    {             
         $data
             ->addRule('exists:model=Options|field=key','key')
-            ->validate();  
+            ->validate(true);  
+
+        $value = $this->get('options')->get($data['key']);
+        $this->setResult($value);           
     }
     
     /**
@@ -90,21 +88,19 @@ class Options extends ControlPanelApiController
      */
     public function saveOptionsController($request, $response, $data) 
     {    
-        $this->onDataValid(function($data) {           
-            $extensionName = $data->get('extension_name',null);
-         
-            $demoMode = $this->get('config')->getByPath('settings/demo_mode',false);
-            if ($demoMode == true) {
-                $this->error('Options save is disabled in demo mode!');
-                return;
-            }
+        $data->validate(true);
 
-            foreach ($data as $key => $value) {
-                $this->get('options')->set($key,$value,$extensionName);
-            }
-            $this->message('options.save');
-        });
+        $extensionName = $data->get('extension_name',null);
+        
+        $demoMode = $this->get('config')->getByPath('settings/demo_mode',false);
+        if ($demoMode == true) {
+            $this->error('Options save is disabled in demo mode!');
+            return;
+        }
 
-        $data->validate();
+        foreach ($data as $key => $value) {
+            $this->get('options')->set($key,$value,$extensionName);
+        }
+        $this->message('options.save');
     }
 }

@@ -55,32 +55,30 @@ class UploadPackages extends ControlPanelApiController
     */
     public function confirmUploadController($request, $response, $data)
     {
-        $this->onDataValid(function($data)  {    
-            
-            $packageDir = $data->get('package_directory');
-            $sourcePath = Path::STORAGE_TEMP_PATH . $packageDir;    
-            
-            if (File::exists($sourcePath) == false) {
-                $this->error('errors.package.temp');
-                return;                
-            }
-            $packageInfo = File::readJsonFile($sourcePath . DIRECTORY_SEPARATOR . 'arikaim-package.json');
-            if ($packageInfo === false) {
-                $this->error('errors.package.json');
-                return;
-            }
-            $destinatinPath = $this->get('packages')->getPackagePath($packageInfo['package-type']);
-            $destinatinPath = $destinatinPath . $packageInfo['name'];
-           
-            $result = File::copy($sourcePath,$destinatinPath);
+        $data->validate(true);  
 
-            $this->setResponse($result,function() use($packageDir) {            
-                $this
-                    ->message('package.upload')                                    
-                    ->field('package',$packageDir);                                                 
-            },'errors.package.upload');
-        });  
-        $data->validate();        
+        $packageDir = $data->get('package_directory');
+        $sourcePath = Path::STORAGE_TEMP_PATH . $packageDir;    
+        
+        if (File::exists($sourcePath) == false) {
+            $this->error('errors.package.temp');
+            return;                
+        }
+        $packageInfo = File::readJsonFile($sourcePath . DIRECTORY_SEPARATOR . 'arikaim-package.json');
+        if ($packageInfo === false) {
+            $this->error('errors.package.json');
+            return;
+        }
+        $destinatinPath = $this->get('packages')->getPackagePath($packageInfo['package-type']);
+        $destinatinPath = $destinatinPath . $packageInfo['name'];
+        
+        $result = File::copy($sourcePath,$destinatinPath);
+
+        $this->setResponse($result,function() use($packageDir) {            
+            $this
+                ->message('package.upload')                                    
+                ->field('package',$packageDir);                                                 
+        },'errors.package.upload');       
     }
 
     /**
@@ -93,55 +91,54 @@ class UploadPackages extends ControlPanelApiController
     */
     public function uploadController($request, $response, $data)
     {  
-        $this->onDataValid(function($data) use ($request) {            
-            $files = $this->uploadFiles($request,Path::STORAGE_TEMP_PATH,false);
+        $data->validate(true);  
 
-            // process uploaded files         
-            foreach ($files as $item) {               
-                if (empty($item['error']) == false) continue;
-                $fileUploaded = $item['name'];
-                $destination = pathinfo($fileUploaded,PATHINFO_FILENAME); 
-                if (File::getExtension($fileUploaded) == 'zip') {
-                    // unzip 
-                    $fileName = Path::STORAGE_TEMP_PATH . $fileUploaded;                   
-                    ZipFile::extract($fileName,Path::STORAGE_TEMP_PATH . $destination);
-                    break;
-                }
-            }
-            $packageDir = pathinfo($fileName,PATHINFO_FILENAME); 
+        $files = $this->uploadFiles($request,Path::STORAGE_TEMP_PATH,false);
 
-            $result = $this->get('storage')->has('temp/' . $packageDir);
-            if ($result == false) {               
-                $this->error('errors.package.upload');
-                return;
+        // process uploaded files         
+        foreach ($files as $item) {               
+            if (empty($item['error']) == false) continue;
+            $fileUploaded = $item['name'];
+            $destination = pathinfo($fileUploaded,PATHINFO_FILENAME); 
+            if (File::getExtension($fileUploaded) == 'zip') {
+                // unzip 
+                $fileName = Path::STORAGE_TEMP_PATH . $fileUploaded;                   
+                ZipFile::extract($fileName,Path::STORAGE_TEMP_PATH . $destination);
+                break;
             }
+        }
+        $packageDir = pathinfo($fileName,PATHINFO_FILENAME); 
 
-            $packageInfo = File::readJsonFile(Path::STORAGE_TEMP_PATH . $packageDir . DIRECTORY_SEPARATOR . 'arikaim-package.json');
-            if ($packageInfo === false) {
-                $this->error('errors.package.json');
-                return;
-            }
-            $packagePath = $this->get('packages')->getPackagePath($packageInfo['package-type']);
-            $destinationPath = Path::getRelativePath($packagePath) . $packageInfo['name'];
+        $result = $this->get('storage')->has('temp/' . $packageDir);
+        if ($result == false) {               
+            $this->error('errors.package.upload');
+            return;
+        }
 
-            $currentPackage = false;
-            if (File::exists($packagePath . $packageInfo['name']) == true) {
-                $packageManager = $this->get('packages')->create($packageInfo['package-type']);
-                $package = $packageManager->createPackage($packageInfo['name']);
-                $currentPackage = $package->getProperties()->toArray();
-            }
-            
-            $this->setResponse($result,function() use($fileUploaded, $packageInfo, $destinationPath, $currentPackage, $packageDir) {            
-                $this
-                    ->message('package.upload')                  
-                    ->field('file_uploaded',$fileUploaded)
-                    ->field('package',$packageInfo)
-                    ->field('destination',$destinationPath)
-                    ->field('package_directory',$packageDir)
-                    ->field('current',$currentPackage);   
-                               
-            },'errors.package.upload');
-        });
-        $data->validate();       
+        $packageInfo = File::readJsonFile(Path::STORAGE_TEMP_PATH . $packageDir . DIRECTORY_SEPARATOR . 'arikaim-package.json');
+        if ($packageInfo === false) {
+            $this->error('errors.package.json');
+            return;
+        }
+        $packagePath = $this->get('packages')->getPackagePath($packageInfo['package-type']);
+        $destinationPath = Path::getRelativePath($packagePath) . $packageInfo['name'];
+
+        $currentPackage = false;
+        if (File::exists($packagePath . $packageInfo['name']) == true) {
+            $packageManager = $this->get('packages')->create($packageInfo['package-type']);
+            $package = $packageManager->createPackage($packageInfo['name']);
+            $currentPackage = $package->getProperties()->toArray();
+        }
+        
+        $this->setResponse($result,function() use($fileUploaded, $packageInfo, $destinationPath, $currentPackage, $packageDir) {            
+            $this
+                ->message('package.upload')                  
+                ->field('file_uploaded',$fileUploaded)
+                ->field('package',$packageInfo)
+                ->field('destination',$destinationPath)
+                ->field('package_directory',$packageDir)
+                ->field('current',$currentPackage);   
+                            
+        },'errors.package.upload');
     }
 }

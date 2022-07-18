@@ -37,26 +37,25 @@ class Mailer extends ControlPanelApiController
      */
     public function sendTestEmailController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {             
-            $user = $this->get('access')->getUser();
-            $componentName = $data->get('component','system:test');
+        $data->validate(true);
+             
+        $user = $this->get('access')->getUser();
+        $componentName = $data->get('component','system:test');
 
-            if (Utils::isEmail($user['email']) == false) {
-                $this->setError('Control panel user email not valid!');
-                return;
-            }       
-            
-            $result = $this->get('mailer')->create($componentName)
-                ->to($user['email'],'Admin User')                         
-                ->send();
+        if (Utils::isEmail($user['email']) == false) {
+            $this->setError('Control panel user email not valid!');
+            return;
+        }       
+        
+        $result = $this->get('mailer')->create($componentName)
+            ->to($user['email'],'Admin User')                         
+            ->send();
 
-            $this->setResponse($result,'mailer.send',function() {
-                $error = $this->get('mailer')->getErrorMessage();
-                $error = (empty($error) == true) ? 'errors.mailer.send' : $error;
+        $this->setResponse($result,'mailer.send',function() {
+            $error = $this->get('mailer')->getErrorMessage();
+            $error = (empty($error) == true) ? 'errors.mailer.send' : $error;
 
-                $this->error($error);
-            });           
-        });
-        $data->validate();
+            $this->error($error);
+        });           
     }
 }

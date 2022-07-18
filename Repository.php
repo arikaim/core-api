@@ -38,47 +38,46 @@ class Repository extends ControlPanelApiController
     */
     public function repositoryDownloadController($request, $response, $data)
     { 
-        $this->onDataValid(function($data) {            
-            $type = $data->get('type',null);
-            $package = $data->get('package',null);
-            $reposioryName = $data->get('repository',null);
-            $reposioryType = $data->get('repository_type',PackageManager::GITHUB_REPOSITORY);
+        $data->validate(true);    
 
-            $packageManager = $this->get('packages')->create($type);
-            if (\is_object($packageManager) == false) {
-                $this->error('Not valid package type.');
-                return false;
-            }
-            $store = new ArikaimStore();
-            $accessKey = $store->getPackageKey($reposioryName);          
-            $repository = ($packageManager->hasPackage($package) == true) ? $packageManager->getRepository($package,$accessKey) : null;
-            
-            if (empty($repository) == true) {               
-                $repository = $packageManager->createRepository($reposioryName,$accessKey,$reposioryType);
-            }
-            if (\is_object($repository) == false) {
-                $this->error('Not valid package name or repository.');
-                return false;
-            }
-            if (($repository->isPrivate() == true) && (empty($accessKey) == true)) {
-                $this->error('Missing package license key.');
-                return false;
-            }
-         
-            if ($type == PackageManager::TEMPLATE_PACKAGE) {
-                // create theme package backup
-                $packageManager->createBackup($package);
-            }
+        $type = $data->get('type',null);
+        $package = $data->get('package',null);
+        $reposioryName = $data->get('repository',null);
+        $reposioryType = $data->get('repository_type',PackageManager::GITHUB_REPOSITORY);
 
-            $result = $repository->install();
-            
-            $this->setResponse($result,function() use($package,$type) {   
-                $this
-                    ->message($type . '.download')
-                    ->field('type',$type)   
-                    ->field('name',$package);                  
-            },'errors.' . $type . '.download');
-        });
-        $data->validate();       
+        $packageManager = $this->get('packages')->create($type);
+        if (\is_object($packageManager) == false) {
+            $this->error('Not valid package type.');
+            return false;
+        }
+        $store = new ArikaimStore();
+        $accessKey = $store->getPackageKey($reposioryName);          
+        $repository = ($packageManager->hasPackage($package) == true) ? $packageManager->getRepository($package,$accessKey) : null;
+        
+        if (empty($repository) == true) {               
+            $repository = $packageManager->createRepository($reposioryName,$accessKey,$reposioryType);
+        }
+        if (\is_object($repository) == false) {
+            $this->error('Not valid package name or repository.');
+            return false;
+        }
+        if (($repository->isPrivate() == true) && (empty($accessKey) == true)) {
+            $this->error('Missing package license key.');
+            return false;
+        }
+        
+        if ($type == PackageManager::TEMPLATE_PACKAGE) {
+            // create theme package backup
+            $packageManager->createBackup($package);
+        }
+
+        $result = $repository->install();
+        
+        $this->setResponse($result,function() use($package,$type) {   
+            $this
+                ->message($type . '.download')
+                ->field('type',$type)   
+                ->field('name',$package);                  
+        },'errors.' . $type . '.download');
     }
 }

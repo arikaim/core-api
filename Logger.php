@@ -36,10 +36,9 @@ class Logger extends ControlPanelApiController
      */
     public function clearController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {            
-            $result = $this->get('logger')->deleteSystemLogs();
-            $this->setResponse($result,'logs.clear','errors.logs.clear');
-        });
-        $data->validate();
+        $data->validate(true);
+
+        $result = $this->get('logger')->deleteSystemLogs();
+        $this->setResponse($result,'logs.clear','errors.logs.clear');
     }
 }

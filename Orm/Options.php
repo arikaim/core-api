@@ -37,20 +37,19 @@ class Options extends ControlPanelApiController
      */
     public function saveOptionsController($request, $response, $data)
     {  
-        $this->onDataValid(function($data) { 
-            $modelName = $data->get('model');
-            $extension = $data->get('extension');
-            $referenceId = $data->get('id');
-            $model = Model::create($modelName,$extension);
-            
-            $result = (\is_object($model) == true) ? $model->saveOptions($referenceId,$data['options']) : false;
-            
-            $this->setResponse($result,function() use($model) {
-                $this
-                    ->message('orm.options.save')
-                    ->field('uuid',$model->uuid);                   
-            },'errors.options.save');
-        });
-        $data->validate();
+        $data->validate(true);
+
+        $modelName = $data->get('model');
+        $extension = $data->get('extension');
+        $referenceId = $data->get('id');
+        $model = Model::create($modelName,$extension);
+        
+        $result = (\is_object($model) == true) ? $model->saveOptions($referenceId,$data['options']) : false;
+        
+        $this->setResponse($result,function() use($model) {
+            $this
+                ->message('orm.options.save')
+                ->field('uuid',$model->uuid);                   
+        },'errors.options.save');
     }
 }

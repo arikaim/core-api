@@ -38,28 +38,27 @@ class Packages extends ControlPanelApiController
      */
     public function unInstallController($request, $response, $data)
     {
-        $this->onDataValid(function($data) { 
-            $this->get('cache')->clear();
+        $data->validate(true);
 
-            $type = $data->get('type',null);
-            $name = $data->get('name',null);
+        $this->get('cache')->clear();
 
-            $packageManager = $this->get('packages')->create($type);
-            $result = $packageManager->unInstallPackage($name);
+        $type = $data->get('type',null);
+        $name = $data->get('name',null);
 
-            if (\is_array($result) == true) {
-                $this->addErrors($result);
-                return;
-            }
+        $packageManager = $this->get('packages')->create($type);
+        $result = $packageManager->unInstallPackage($name);
 
-            $this->setResponse($result,function() use($name,$type) {                  
-                $this
-                    ->message($type . '.uninstall')
-                    ->field('type',$type)   
-                    ->field('name',$name);                  
-            },'errors.' . $type . '.uninstall');
-        });
-        $data->validate();
+        if (\is_array($result) == true) {
+            $this->addErrors($result);
+            return;
+        }
+
+        $this->setResponse($result,function() use($name,$type) {                  
+            $this
+                ->message($type . '.uninstall')
+                ->field('type',$type)   
+                ->field('name',$name);                  
+        },'errors.' . $type . '.uninstall');
     }
 
     /**
@@ -72,39 +71,38 @@ class Packages extends ControlPanelApiController
      */
     public function updateComposerPackagesController($request, $response, $data)
     {
-        $this->onDataValid(function($data) { 
-            $this->get('cache')->clear();
-          
-            $type = $data->get('type',null);
-            $name = $data->get('name',null);
+        $data->validate(true);
 
-            $packageManager = $this->get('packages')->create($type);
-            $package = $packageManager->createPackage($name);
+        $this->get('cache')->clear();
         
-            if (\is_object($package) == false) {
-                $this->error('errors.package.name');
-                return;
-            }
-            $require = $package->getRequire();
-            $composerPackages = $require->get('composer',[]);
-            
-            foreach ($composerPackages as $packageName) {
-                if (Composer::isInstalled($packageName) === false) {
-                    Composer::requirePackage($packageName);     
-                } else {
-                    Composer::updatePackage($packageName);     
-                }                         
-            }    
-            $result = (bool)Composer::isInstalled($composerPackages);
+        $type = $data->get('type',null);
+        $name = $data->get('name',null);
+
+        $packageManager = $this->get('packages')->create($type);
+        $package = $packageManager->createPackage($name);
+    
+        if (\is_object($package) == false) {
+            $this->error('errors.package.name');
+            return;
+        }
+        $require = $package->getRequire();
+        $composerPackages = $require->get('composer',[]);
         
-            $this->setResponse($result,function() use($name,$type) {                  
-                $this
-                    ->message('composer.update')
-                    ->field('type',$type)   
-                    ->field('name',$name);                  
-            },'errors.composer.update');
-        });
-        $data->validate();
+        foreach ($composerPackages as $packageName) {
+            if (Composer::isInstalled($packageName) === false) {
+                Composer::requirePackage($packageName);     
+            } else {
+                Composer::updatePackage($packageName);     
+            }                         
+        }    
+        $result = (bool)Composer::isInstalled($composerPackages);
+    
+        $this->setResponse($result,function() use($name,$type) {                  
+            $this
+                ->message('composer.update')
+                ->field('type',$type)   
+                ->field('name',$name);                  
+        },'errors.composer.update');
     }
 
     /**
@@ -117,38 +115,37 @@ class Packages extends ControlPanelApiController
      */
     public function installController($request, $response, $data)
     {
-        $this->onDataValid(function($data) { 
-            $this->get('cache')->clear();
-          
-            $type = $data->get('type',null);
-            $name = $data->get('name',null);
-            $runPostInstall = $data->get('run_post_install',true);
+        $data->validate(true);
 
-            $packageManager = $this->get('packages')->create($type);
-            $result = $packageManager->installPackage($name);
-            if (\is_string($result) == true) {
-                $this->error($result);
-                return false;
-            }
+        $this->get('cache')->clear();
+        
+        $type = $data->get('type',null);
+        $name = $data->get('name',null);
+        $runPostInstall = $data->get('run_post_install',true);
 
-            if (\is_array($result) == true) {
-                $this->addErrors($result);
-                return;
-            }
-            
-            if ($runPostInstall == true) {               
-                // post install actions
-                $packageManager->postInstallPackage($name);
-            }
-            
-            $this->setResponse($result,function() use($name,$type) {                  
-                $this
-                    ->message($type . '.install')
-                    ->field('type',$type)   
-                    ->field('name',$name);                  
-            },'errors.' . $type . '.install');
-        });
-        $data->validate();
+        $packageManager = $this->get('packages')->create($type);
+        $result = $packageManager->installPackage($name);
+        if (\is_string($result) == true) {
+            $this->error($result);
+            return false;
+        }
+
+        if (\is_array($result) == true) {
+            $this->addErrors($result);
+            return;
+        }
+        
+        if ($runPostInstall == true) {               
+            // post install actions
+            $packageManager->postInstallPackage($name);
+        }
+        
+        $this->setResponse($result,function() use($name,$type) {                  
+            $this
+                ->message($type . '.install')
+                ->field('type',$type)   
+                ->field('name',$name);                  
+        },'errors.' . $type . '.install');
     }
 
     /**
@@ -161,55 +158,54 @@ class Packages extends ControlPanelApiController
      */
     public function updateController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {  
-            $this->get('cache')->clear();
+        $data->validate(true);
+
+        $this->get('cache')->clear();
+    
+        $type = $data->get('type',null);
+        $name = $data->get('name',null);
+        $runPostInstall = $data->get('run_post_install',true);
+
+        $packageManager = $this->get('packages')->create($type);            
+        $package = $packageManager->createPackage($name);
+        if (\is_object($package) == false) {
+            $this->error('errors.package.name');
+            return;
+        }
+
+        $properties = $package->getProperties();
+        $primary = $properties->get('primary',false);
+
+        $package->unInstall();    
         
-            $type = $data->get('type',null);
-            $name = $data->get('name',null);
-            $runPostInstall = $data->get('run_post_install',true);
-
-            $packageManager = $this->get('packages')->create($type);            
-            $package = $packageManager->createPackage($name);
-            if (\is_object($package) == false) {
-                $this->error('errors.package.name');
-                return;
-            }
-
-            $properties = $package->getProperties();
-            $primary = $properties->get('primary',false);
-
-            $package->unInstall();    
-            
-            $this->get('cache')->clear();
-           
-            $result = $package->install($primary);
-            if (\is_string($result) == true) {
-                $this->error($result);
-                return false;
-            }
-
-            if ($primary == true) { 
-                $package->setPrimary();
-            }
-            
-            if (\is_array($result) == true) {
-                $this->addErrors($result);
-                return;
-            }
+        $this->get('cache')->clear();
         
-            if ($runPostInstall == true) {
-                // run post install actions
-                $package->postInstall();
-            }
-                      
-            $this->setResponse($result,function() use($name,$type) {
-                $this
-                    ->message($type . '.update')
-                    ->field('type',$type)   
-                    ->field('name',$name);         
-            },'errors.' . $type  . '.update');
-        });
-        $data->validate();
+        $result = $package->install($primary);
+        if (\is_string($result) == true) {
+            $this->error($result);
+            return false;
+        }
+
+        if ($primary == true) { 
+            $package->setPrimary();
+        }
+        
+        if (\is_array($result) == true) {
+            $this->addErrors($result);
+            return;
+        }
+    
+        if ($runPostInstall == true) {
+            // run post install actions
+            $package->postInstall();
+        }
+                    
+        $this->setResponse($result,function() use($name,$type) {
+            $this
+                ->message($type . '.update')
+                ->field('type',$type)   
+                ->field('name',$name);         
+        },'errors.' . $type  . '.update');
     }
 
     /**
@@ -222,27 +218,26 @@ class Packages extends ControlPanelApiController
      */
     public function setStatusController($request, $response, $data)
     { 
-        $this->onDataValid(function($data) {   
-            $this->get('cache')->clear();
+        $data->validate(true);
 
-            $type = $data->get('type',null);
-            $name = $data->get('name',null);
-            $status = $data->get('status',1);
+        $this->get('cache')->clear();
 
-            $packageManager = $this->get('packages')->create($type);            
-          
-            $result = ($status == 1) ? $packageManager->enablePackage($name) : $packageManager->disablePackage($name);
-            $stausLabel = ($status == 1) ? 'enable' : 'disable';
+        $type = $data->get('type',null);
+        $name = $data->get('name',null);
+        $status = $data->get('status',1);
 
-            $this->setResponse($result,function() use($name,$type,$status,$stausLabel) {               
-                $this
-                    ->message($type . '.' . $stausLabel)
-                    ->field('type',$type)   
-                    ->field('status',$status)
-                    ->field('name',$name);         
-            },'errors.' . $type  . '.' . $stausLabel);
-        });
-        $data->validate();
+        $packageManager = $this->get('packages')->create($type);            
+        
+        $result = ($status == 1) ? $packageManager->enablePackage($name) : $packageManager->disablePackage($name);
+        $stausLabel = ($status == 1) ? 'enable' : 'disable';
+
+        $this->setResponse($result,function() use($name,$type,$status,$stausLabel) {               
+            $this
+                ->message($type . '.' . $stausLabel)
+                ->field('type',$type)   
+                ->field('status',$status)
+                ->field('name',$name);         
+        },'errors.' . $type  . '.' . $stausLabel); 
     }
 
     /**
@@ -255,16 +250,15 @@ class Packages extends ControlPanelApiController
      */
     public function saveConfigController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {    
-            $this->get('cache')->clear();
+        $data->validate(true);   
 
-            $module = Model::Modules()->FindByColumn('name',$data['name']);
-            $module->config = $data->toArray();
-            $result = $module->save();
-            
-            $this->setResponse($result,'module.config','errors.module.config');
-        });
-        $data->validate();       
+        $this->get('cache')->clear();
+
+        $module = Model::Modules()->FindByColumn('name',$data['name']);
+        $module->config = $data->toArray();
+        $result = $module->save();
+        
+        $this->setResponse($result,'module.config','errors.module.config');
     }
 
     /**
@@ -277,24 +271,23 @@ class Packages extends ControlPanelApiController
      */
     public function setPrimaryController($request, $response, $data)
     {      
-        $this->onDataValid(function($data) { 
-            $this->get('cache')->clear();
+        $data->validate(true);    
 
-            $name = $data['name'];
-            $type = $data->get('type','template');
+        $this->get('cache')->clear();
 
-            $packageManager = $this->get('packages')->create($type);            
-          
-            $package = $packageManager->createPackage($name);
-            $result = (\is_object($package) == true) ? $package->setPrimary() : false;
-            
-            $this->setResponse($result,function() use($name,$type) {         
-                $this
-                    ->message($type . '.primary')
-                    ->field('name',$name);         
-            },'errors.' . $type . '.primary'); 
-        });
-        $data->validate();            
+        $name = $data['name'];
+        $type = $data->get('type','template');
+
+        $packageManager = $this->get('packages')->create($type);            
+        
+        $package = $packageManager->createPackage($name);
+        $result = (\is_object($package) == true) ? $package->setPrimary() : false;
+        
+        $this->setResponse($result,function() use($name,$type) {         
+            $this
+                ->message($type . '.primary')
+                ->field('name',$name);         
+        },'errors.' . $type . '.primary'); 
     }
 
     /**
@@ -307,22 +300,21 @@ class Packages extends ControlPanelApiController
      */
     public function setLibraryParamsController($request, $response, $data)
     {        
-        $this->onDataValid(function($data) { 
-            $name = $data['name'];
-            $libraryParams = $data->get('params',[]);
-            
-            $packageManager = $this->get('packages')->create('library');
-            $package = $packageManager->createPackage($name);
+        $data->validate(true);    
 
-            $result = $package->saveLibraryParams($libraryParams);
-    
-            $this->setResponse($result,function() use($name) {                        
-                $this
-                    ->message('library.params')
-                    ->field('name',$name);         
-            },'errors.library.params'); 
-        });
-        $data->validate();            
+        $name = $data['name'];
+        $libraryParams = $data->get('params',[]);
+        
+        $packageManager = $this->get('packages')->create('library');
+        $package = $packageManager->createPackage($name);
+
+        $result = $package->saveLibraryParams($libraryParams);
+
+        $this->setResponse($result,function() use($name) {                        
+            $this
+                ->message('library.params')
+                ->field('name',$name);         
+        },'errors.library.params'); 
     }
 
      /**
@@ -335,24 +327,23 @@ class Packages extends ControlPanelApiController
      */
     public function setLibraryStatusController($request, $response, $data)
     {        
-        $this->onDataValid(function($data) { 
-            $name =  $data->get('name');
-            $status = (bool)$data->get('status',false);
+        $data->validate(true);    
 
-            $packageManager = $this->get('packages')->create('library');
-            $library = $packageManager->createPackage($name);
-            $library->setStatus($status);
+        $name =  $data->get('name');
+        $status = (bool)$data->get('status',false);
 
-            $result = $library->savePackageProperties();
-            $this->get('cache')->clear();
+        $packageManager = $this->get('packages')->create('library');
+        $library = $packageManager->createPackage($name);
+        $library->setStatus($status);
 
-            $this->setResponse($result,function() use($name,$status) {                        
-                $this
-                    ->message('library.status')
-                    ->field('status',$status)
-                    ->field('name',$name);         
-            },'errors.library.params'); 
-        });
-        $data->validate();            
+        $result = $library->savePackageProperties();
+        $this->get('cache')->clear();
+
+        $this->setResponse($result,function() use($name,$status) {                        
+            $this
+                ->message('library.status')
+                ->field('status',$status)
+                ->field('name',$name);         
+        },'errors.library.params'); 
     }
 }

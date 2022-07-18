@@ -37,21 +37,20 @@ class Relations extends ControlPanelApiController
      */
     public function deleteRelationController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {
-            $model = Model::create($data['model'],$data['extension']);
-            if (\is_object($model) == false) {               
-                $this->error('errors.relations.add');               
-                return;
-            }
-            if (empty($data['type']) == false && empty($data['relation_id']) == false) {
-                $result = $model->deleteRelations($data['id'],$data['type'],$data['relation_id']);
-            } else {
-                $result = $model->deleteRelation($data['uuid']);
-            }
-            
-            $this->setResponse($result,'relations.delete','errors.relations.delete');
-        });
-        $data->validate();
+        $data->validate(true);
+
+        $model = Model::create($data['model'],$data['extension']);
+        if (\is_object($model) == false) {               
+            $this->error('errors.relations.add');               
+            return;
+        }
+        if (empty($data['type']) == false && empty($data['relation_id']) == false) {
+            $result = $model->deleteRelations($data['id'],$data['type'],$data['relation_id']);
+        } else {
+            $result = $model->deleteRelation($data['uuid']);
+        }
+        
+        $this->setResponse($result,'relations.delete','errors.relations.delete');
     }
 
     /**
@@ -64,19 +63,18 @@ class Relations extends ControlPanelApiController
      */
     public function addRelationController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {                        
-            $model = Model::create($data['model'],$data['extension']);
-            if (\is_object($model) == false) {
-                $this->error('errors.relations.add');
-                return;
-            }
+        $data->validate(true);
+          
+        $model = Model::create($data['model'],$data['extension']);
+        if (\is_object($model) == false) {
+            $this->error('errors.relations.add');
+            return;
+        }
 
-            $model = $model->saveRelation($data['id'],$data['type'],$data['relation_id']);
-            $result = (\is_object($model) == true) ? true : $model;
+        $model = $model->saveRelation($data['id'],$data['type'],$data['relation_id']);
+        $result = (\is_object($model) == true) ? true : $model;
 
-            $this->setResponse($result,'relations.add','errors.relations.add');
-        });
-        $data->validate();
+        $this->setResponse($result,'relations.add','errors.relations.add');
     }
 
     /**
@@ -89,16 +87,15 @@ class Relations extends ControlPanelApiController
      */
     public function readController($request, $response, $data)
     {
-        $this->onDataValid(function($data) {                        
-            $model = Model::create($data['name'],$data['extension']);
-            $model = (is_object($model) == true) ? $model->findById($data['uuid']) : null;
-  
-            $this->setResponse(is_object($model),function() use($model) {
-                $this
-                    ->message('orm.read')
-                    ->field('data',$model->toArray());                   
-            },'errors.orm.read');
-        });
-        $data->validate();
+        $data->validate(true);
+
+        $model = Model::create($data['name'],$data['extension']);
+        $model = (is_object($model) == true) ? $model->findById($data['uuid']) : null;
+
+        $this->setResponse(is_object($model),function() use($model) {
+            $this
+                ->message('orm.read')
+                ->field('data',$model->toArray());                   
+        },'errors.orm.read');
     }
 }
