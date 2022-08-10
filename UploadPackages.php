@@ -107,7 +107,7 @@ class UploadPackages extends ControlPanelApiController
                 break;
             }
         }
-        $packageDir = pathinfo($fileName,PATHINFO_FILENAME); 
+        $packageDir = \pathinfo($fileName,PATHINFO_FILENAME); 
 
         $result = $this->get('storage')->has('temp/' . $packageDir);
         if ($result == false) {               
