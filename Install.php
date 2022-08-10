@@ -69,7 +69,7 @@ class Install extends ApiController
         $this->get('cache')->clear();
             
         // relod config file
-        $this->get('config')->reloadConfig(false);
+        $this->get('config')->reloadConfig();
 
         $result = $this->get('db')->testConnection($this->get('config')->get('db'));
         if ($result == false) {                
@@ -105,7 +105,7 @@ class Install extends ApiController
         // clear cache
         $this->get('cache')->clear();
         // relod config file
-        $this->get('config')->reloadConfig(false);
+        $this->get('config')->reloadConfig();
         
         // do install        
         $this->initTaskProgress();
