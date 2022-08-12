@@ -75,15 +75,16 @@ class Language extends ControlPanelApiController
             ->addRule('unique:model=Language|field=code_3','code_3',$this->getMessage('errors.language.code3'))
             ->addRule('text:min=2|max=2','language_code')
             ->validate(true);
-
-                         
+      
         $model = Model::Language()->add($data->toArray());  
-        
-        $this->setResponse(\is_object($model),function() use($model) {
-            $this
-                ->message('language.add')
-                ->field('uuid',$model->uuid);
-        },'errors.language.add');  
+        if ($model == null) {
+            $this->error('errors.language.add');
+            return false;
+        }
+       
+        $this
+            ->message('language.add')
+            ->field('uuid',$model->uuid);
     }
 
     /**
