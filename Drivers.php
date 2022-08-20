@@ -34,7 +34,7 @@ class Drivers extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function saveConfigController($request, $response, $data)
+    public function saveConfig($request, $response, $data)
     {
         $data
             ->addRule('text:required','name')               
@@ -44,8 +44,6 @@ class Drivers extends ControlPanelApiController
         $data->offsetUnset('name');
 
         $config = $this->get('driver')->getConfig($driverName);
-        // change config valus
-
         $config->setPropertyValues($data->toArray());
         $result = $this->get('driver')->saveConfig($driverName,$config);
     
@@ -60,7 +58,7 @@ class Drivers extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function setStatusController($request, $response, $data)
+    public function setStatus($request, $response, $data)
     {
         $data->validate(true);  
 
@@ -79,12 +77,11 @@ class Drivers extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function uninstallController($request, $response, $data)
+    public function uninstall($request, $response, $data)
     {
         $data->validate(true);  
 
-        $name = $data->get('name');
-        $result = $this->get('driver')->unInstall($name);
+        $result = $this->get('driver')->unInstall($data['name']);
     
         $this->setResponse($result,'drivers.uninstall','errors.drivers.uninstall');    
     }

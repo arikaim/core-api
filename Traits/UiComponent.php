@@ -9,8 +9,6 @@
 */
 namespace Arikaim\Core\Api\Traits;
 
-use Arikaim\Core\Collection\Arrays;
-
 /**
  * UiComponent Api controller
 */
@@ -40,20 +38,16 @@ trait UiComponent
             return $this->withError($error)->getResponse();          
         }
       
-        $files = $this->get('page')->getComponentsFiles();
-        
-        $result = [
+        return $this->setResult([
             'name'                => $component->getFullName(),
             'component_id'        => $component->id,
             'type'                => $component->getComponentType(),
             'html'                => $component->getHtmlCode(),   
-            'css'                 => Arrays::arrayColumns($files['css'],['url','params','component_name']),
-            'js'                  => Arrays::arrayColumns($files['js'],['url','params','component_name','component_type','component_id']),                 
+            'css'                 => [], 
+            'js'                  => $this->get('page')->getComponentsFiles()['js'],                 
             'components'          => $this->get('page')->getIncludedComponents(),
             'component_instances' => $this->get('page')->getComponentInstances()                   
-        ];
-        
-        return $this->setResult($result)->getResponse();        
+        ])->getResponse();        
     }
 
     /**

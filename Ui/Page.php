@@ -28,15 +28,13 @@ class Page extends ApiController
     {        
         $libraryName = $data->get('name',null);
         $data = $this->get('page')->getLibraryDetails($libraryName);
-        
-        $result = [
+          
+        return $this->setResult([
             'name'        => $libraryName,
             'css'         => $data['files']['css'] ?? [],
             'js'          => $data['files']['js'] ?? [],
             'async'       => $data['async'],
             'crossorigin' => $data['crossorigin']
-        ];
-       
-        return $this->setResult($result)->getResponse();       
+        ])->getResponse();       
     }
 }

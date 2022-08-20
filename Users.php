@@ -36,7 +36,7 @@ class Users extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function adminLoginController($request, $response, $data) 
+    public function adminLogin($request, $response, $data) 
     { 
         $data
             ->addRule('text:min=2','user_name')   
@@ -76,7 +76,7 @@ class Users extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function logoutController($request, $response, $data) 
+    public function logout($request, $response, $data) 
     {    
         // remove token
         Cookie::delete('user');
@@ -95,7 +95,7 @@ class Users extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function changeDetailsController($request, $response, $data)
+    public function changeDetails($request, $response, $data)
     {
         // access from contorl panel only 
         $this->requireControlPanelPermission();
@@ -139,7 +139,7 @@ class Users extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function changePasswordController($request, $response, $data)
+    public function changePassword($request, $response, $data)
     {
         // access from contorl panel only 
         $this->requireControlPanelPermission();

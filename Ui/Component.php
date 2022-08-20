@@ -66,14 +66,12 @@ class Component extends ApiController
             $error = $component->getError();
             return $this->withError($this->get('errors')->getError($error['code'],$error['params']))->getResponse();            
         }
-
-        $details = [
+ 
+        return $this->setResult([
             'properties' => $component->getProperties(),
             'options'    => $component->getOptions(),
             'files'      => $component->getFiles()
-        ];
-        
-        return $this->setResult($details)->getResponse();       
+        ])->getResponse();       
     }
 
     /**

@@ -35,7 +35,7 @@ class Cache extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function clearController($request, $response, $data)
+    public function clear($request, $response, $data)
     { 
         $result = $this->get('cache')->clear();
         $this->setResponse($result,'cache.clear','errors.cache.clear');
@@ -49,7 +49,7 @@ class Cache extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function enableController($request, $response, $data)
+    public function enable($request, $response, $data)
     {
         $result = File::setWritable($this->get('cache')->getCacheDir());
         if ($result === false) {
@@ -74,7 +74,7 @@ class Cache extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function disableController($request, $response, $data)
+    public function disable($request, $response, $data)
     {
         $this->get('config')->setBooleanValue('settings/cache',false);
         $result = $this->get('config')->save();
@@ -93,15 +93,16 @@ class Cache extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function setDriverController($request, $response, $data)
+    public function setDriver($request, $response, $data)
     {
-        $driverName = $data->get('name','filesystem');
+        $driverName = $data->get('name','void');
         $this->get('config')->setValue('settings/cacheDriver',$driverName);
         $result = $this->get('config')->save();
         
         $this->get('cache')->clear();
         $this->get('config')->reloadConfig();
-
+        $this->get('cache')->setDriver($driverName);
+        
         $this->setResponse($result,'cache.driver','errors.cache.driver');
     }
 }
