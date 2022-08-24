@@ -36,7 +36,7 @@ class Store extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function saveOrderController($request, $response, $data)
+    public function saveOrder($request, $response, $data)
     {
         $orderId = $data->get('order_id');
         $apiDriver = $data->get('api_driver');
@@ -88,7 +88,7 @@ class Store extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function removeOrderController($request, $response, $data)
+    public function removeOrder($request, $response, $data)
     {
         $store = new ArikaimStore();
         $store->clear();

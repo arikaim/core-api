@@ -41,7 +41,7 @@ class UploadPackages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function packageInfoController($request, $response, $data)
+    public function packageInfo($request, $response, $data)
     {
     }
 
@@ -53,7 +53,7 @@ class UploadPackages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function confirmUploadController($request, $response, $data)
+    public function confirmUpload($request, $response, $data)
     {
         $data->validate(true);  
 
@@ -89,7 +89,7 @@ class UploadPackages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function uploadController($request, $response, $data)
+    public function upload($request, $response, $data)
     {  
         $data->validate(true);  
 

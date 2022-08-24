@@ -25,7 +25,7 @@ class Paginator extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function setPageController($request, $response, $data) 
+    public function setPage($request, $response, $data) 
     {       
         $namespace = $data->get('namespace',null);
         $page = $data->get('page',1);
@@ -55,7 +55,7 @@ class Paginator extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function removeController($request, $response, $data) 
+    public function remove($request, $response, $data) 
     {       
         $namespace = $data->get('namespace',null);
         SessionPaginator::clearPaginator($namespace);
@@ -71,7 +71,7 @@ class Paginator extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function setPageSizeController($request, $response, $data) 
+    public function setPageSize($request, $response, $data) 
     {       
         $namespace = $data->get('namespace','');
         $pageSize = $data->get('page_size',1);
@@ -90,7 +90,7 @@ class Paginator extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function getPageController($request, $response, $data) 
+    public function getPage($request, $response, $data) 
     {
         $namespace = $data->get('namespace',null);
         $paginator = SessionPaginator::getPaginator($namespace);
@@ -109,7 +109,7 @@ class Paginator extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function setViewTypeController($request, $response, $data) 
+    public function setViewType($request, $response, $data) 
     {
         $namespace = $data->get('namespace',null);
         $view = $data->get('view',null);
@@ -128,7 +128,7 @@ class Paginator extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function getViewTypeController($request, $response, $data) 
+    public function getViewType($request, $response, $data) 
     {
         $namespace = $data->get('namespace',null);
         

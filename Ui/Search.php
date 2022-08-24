@@ -26,7 +26,7 @@ class Search extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function setSearchController($request, $response, $data) 
+    public function setSearch($request, $response, $data) 
     {
         $namespace = $data->get('namespace','');
         $search = $data->get('search',[]);
@@ -48,7 +48,7 @@ class Search extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function getSearchController($request, $response, $data) 
+    public function getSearch($request, $response, $data) 
     {
         $namespace = $data->get('namespace','');
         $this
@@ -64,7 +64,7 @@ class Search extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function clearSearchController($request, $response, $data) 
+    public function clearSearch($request, $response, $data) 
     {
         $namespace = $data->get('namespace','');
 

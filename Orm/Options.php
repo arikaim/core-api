@@ -35,7 +35,7 @@ class Options extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function saveOptionsController($request, $response, $data)
+    public function saveOptions($request, $response, $data)
     {  
         $data->validate(true);
 

@@ -36,7 +36,7 @@ class Packages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function unInstallController($request, $response, $data)
+    public function unInstall($request, $response, $data)
     {
         $data->validate(true);
 
@@ -69,7 +69,7 @@ class Packages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function updateComposerPackagesController($request, $response, $data)
+    public function updateComposerPackages($request, $response, $data)
     {
         $data->validate(true);
 
@@ -113,7 +113,7 @@ class Packages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function installController($request, $response, $data)
+    public function install($request, $response, $data)
     {
         $data->validate(true);
 
@@ -156,7 +156,7 @@ class Packages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function updateController($request, $response, $data)
+    public function update($request, $response, $data)
     {
         $data->validate(true);
 
@@ -216,7 +216,7 @@ class Packages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function setStatusController($request, $response, $data)
+    public function setStatus($request, $response, $data)
     { 
         $data->validate(true);
 
@@ -248,7 +248,7 @@ class Packages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function saveConfigController($request, $response, $data)
+    public function saveConfig($request, $response, $data)
     {
         $data->validate(true);   
 
@@ -269,7 +269,7 @@ class Packages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function setPrimaryController($request, $response, $data)
+    public function setPrimary($request, $response, $data)
     {      
         $data->validate(true);    
 
@@ -298,7 +298,7 @@ class Packages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function setLibraryParamsController($request, $response, $data)
+    public function setLibraryParams($request, $response, $data)
     {        
         $data->validate(true);    
 
@@ -325,7 +325,7 @@ class Packages extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function setLibraryStatusController($request, $response, $data)
+    public function setLibraryStatus($request, $response, $data)
     {        
         $data->validate(true);    
 

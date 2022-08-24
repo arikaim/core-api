@@ -34,7 +34,7 @@ class Logger extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function clearController($request, $response, $data)
+    public function clear($request, $response, $data)
     {
         $data->validate(true);
 

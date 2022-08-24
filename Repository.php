@@ -36,7 +36,7 @@ class Repository extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function repositoryDownloadController($request, $response, $data)
+    public function repositoryDownload($request, $response, $data)
     { 
         $data->validate(true);    
 

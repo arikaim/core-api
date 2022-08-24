@@ -34,7 +34,7 @@ class Options extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function saveController($request, $response, $data) 
+    public function save($request, $response, $data) 
     {       
         $data
             ->addRule('text:min=2','key')
@@ -68,7 +68,7 @@ class Options extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function getController($request, $response, $data) 
+    public function get($request, $response, $data) 
     {             
         $data
             ->addRule('exists:model=Options|field=key','key')
@@ -86,7 +86,7 @@ class Options extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function saveOptionsController($request, $response, $data) 
+    public function saveOptions($request, $response, $data) 
     {    
         $data->validate(true);
 

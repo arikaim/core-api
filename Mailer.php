@@ -35,7 +35,7 @@ class Mailer extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function sendTestEmailController($request, $response, $data)
+    public function sendTestEmail($request, $response, $data)
     {
         $data->validate(true);
              

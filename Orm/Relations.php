@@ -35,7 +35,7 @@ class Relations extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function deleteRelationController($request, $response, $data)
+    public function deleteRelation($request, $response, $data)
     {
         $data->validate(true);
 
@@ -61,7 +61,7 @@ class Relations extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function addRelationController($request, $response, $data)
+    public function addRelation($request, $response, $data)
     {
         $data->validate(true);
           
@@ -85,7 +85,7 @@ class Relations extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function readController($request, $response, $data)
+    public function read($request, $response, $data)
     {
         $data->validate(true);
 

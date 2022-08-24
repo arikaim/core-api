@@ -34,7 +34,7 @@ class Settings extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function disableInstallPageController($request, $response, $data)
+    public function disableInstallPage($request, $response, $data)
     {
         $installPage = $data->get('install_page',false);
         $this->get('cache')->clear();
@@ -56,7 +56,7 @@ class Settings extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function updateOptionController($request, $response, $data)
+    public function updateOption($request, $response, $data)
     {
         $key = $data->getString('key',null);
         $value = $data->getString('value',null);

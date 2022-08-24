@@ -35,7 +35,7 @@ class Language extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function updateController($request, $response, $data) 
+    public function update($request, $response, $data) 
     {    
         $uuid = $data->get('uuid');
         $model = Model::Language()->findById($uuid);
@@ -66,7 +66,7 @@ class Language extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function addController($request, $response, $data) 
+    public function add($request, $response, $data) 
     {       
         $data
             ->addRule('text:min=2','title')
@@ -95,7 +95,7 @@ class Language extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function removeController($request, $response, $data)
+    public function remove($request, $response, $data)
     { 
         $data
             ->addRule('exists:model=Language|field=uuid','uuid')
@@ -119,7 +119,7 @@ class Language extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function setStatusController($request, $response, $data)
+    public function setStatus($request, $response, $data)
     {       
         $data
             ->addRule('exists:model=Language|field=uuid','uuid')
@@ -146,7 +146,7 @@ class Language extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function setDefaultController($request, $response, $data)
+    public function setDefault($request, $response, $data)
     {
         $data
             ->addRule('exists:model=Language|field=uuid','uuid')
@@ -180,7 +180,7 @@ class Language extends ControlPanelApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function changeLanguageController($request, $response, $data)
+    public function changeLanguage($request, $response, $data)
     { 
         $data
             ->addRule('exists:model=Language|field=code','language_code')
