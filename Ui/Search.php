@@ -9,14 +9,14 @@
 */
 namespace Arikaim\Core\Api\Ui;
 
-use Arikaim\Core\Controllers\ApiController;
+use Arikaim\Core\Controllers\FastApiController;
 use Arikaim\Core\Db\Search as SessionSearch;
 use Arikaim\Core\Paginator\SessionPaginator;
 
 /**
  * Search Api controller
 */
-class Search extends ApiController 
+class Search extends FastApiController 
 {
     /**
      * Set search conditions
@@ -71,7 +71,7 @@ class Search extends ApiController
         SessionSearch::clearSearch($namespace);   
 
         $this
-            ->message('done')
+            ->field('message','Done')
             ->field('namespace',$namespace);      
     }
 }

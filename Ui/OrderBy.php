@@ -9,13 +9,13 @@
 */
 namespace Arikaim\Core\Api\Ui;
 
-use Arikaim\Core\Controllers\ApiController;
+use Arikaim\Core\Controllers\FastApiController;
 use Arikaim\Core\Db\OrderBy as OrderByColumn;
 
 /**
  * Order by column api controller
 */
-class OrderBy extends ApiController 
+class OrderBy extends FastApiController 
 {
     /**
      * Set order by column
@@ -32,12 +32,11 @@ class OrderBy extends ApiController
         $type = $data->get('type');
         OrderByColumn::setOrderBy($field,$type,$namespace);
 
-        $this
+        return $this
             ->field('order',OrderByColumn::getOrderBy($namespace))
             ->field('namespace',$namespace)
-            ->field('type',$type);
-            
-        return $this->getResponse();
+            ->field('type',$type)
+            ->getResponse();
     }
 
     /**
@@ -51,11 +50,11 @@ class OrderBy extends ApiController
     public function getOrderBy($request, $response, $data) 
     {
         $namespace = $data->get('namespace',null);
-        $this
+        
+        return $this
             ->field('order',OrderByColumn::getOrderBy($namespace))
-            ->field('namespace',$namespace);
-
-        return $this->getResponse();
+            ->field('namespace',$namespace)
+            ->getResponse();
     }
 
     /**
@@ -71,6 +70,8 @@ class OrderBy extends ApiController
         $namespace = $data->get('namespace',null);        
         OrderByColumn::deleteOrderBy($namespace);
 
-        return $this->field('namespace',$namespace)->getResponse();      
+        return $this
+            ->field('namespace',$namespace)
+            ->getResponse();      
     }
 }

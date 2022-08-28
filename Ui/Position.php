@@ -28,7 +28,7 @@ class Position extends ApiController
     }
 
     /**
-     * Set paginator current page
+     * shift position
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
@@ -40,11 +40,37 @@ class Position extends ApiController
         $this->requireControlPanelPermission();
 
         $model = $this->createModel($data);
-
-        if (\is_object($model) == true) {          
+        if ($model !== null) {          
             $targetModel = $model->findById($data->get('target_uuid'));
-            if (\is_object($targetModel) == true) {                    
+            if ($targetModel !== null) {                    
                 $model->shiftPosition($targetModel);
+            }
+            $this->message('done');
+        } else {
+            $this->error('errors.position');
+        }
+       
+        return $this->getResponse();
+    }
+
+    /**
+     * Swap position
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return Psr\Http\Message\ResponseInterface
+     */
+    public function swap($request, $response, $data) 
+    {
+        $this->requireControlPanelPermission();
+
+        $model = $this->createModel($data);
+
+        if ($model !== null) {          
+            $targetModel = $model->findById($data->get('target_uuid'));
+            if ($targetModel !== null) {                    
+                $model->swapPosition($targetModel);
             }
             $this->message('done');
         } else {
@@ -58,39 +84,12 @@ class Position extends ApiController
      * Create model object form request data
      *
      * @param Validator $data
-     * @return object|false
+     * @return object|null
      */
-    public function createModel($data)
+    protected function createModel($data): ?object
     {
         $model = Model::create($data->get('model_name'));
 
-        return (\is_object($model) == true) ? $model->findById($data->get('uuid')) : false;      
-    }
-
-    /**
-     * Set paginator current page
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
-     */
-    public function swap($request, $response, $data) 
-    {
-        $this->requireControlPanelPermission();
-
-        $model = $this->createModel($data);
-
-        if (\is_object($model) == true) {          
-            $targetModel = $model->findById($data->get('target_uuid'));
-            if (\is_object($targetModel) == true) {                    
-                $model->swapPosition($targetModel);
-            }
-            $this->message('done');
-        } else {
-            $this->error('errors.position');
-        }
-       
-        return $this->getResponse();
+        return ($model == null) ? null : $model->findById($data->get('uuid'));      
     }
 }

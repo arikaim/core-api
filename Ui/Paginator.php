@@ -9,13 +9,13 @@
 */
 namespace Arikaim\Core\Api\Ui;
 
-use Arikaim\Core\Controllers\ApiController;
+use Arikaim\Core\Controllers\FastApiController;
 use Arikaim\Core\Paginator\SessionPaginator;
 
 /**
  * Paginator Api controller
 */
-class Paginator extends ApiController 
+class Paginator extends FastApiController 
 {
     /**
      * Set paginator current page
@@ -59,6 +59,7 @@ class Paginator extends ApiController
     {       
         $namespace = $data->get('namespace',null);
         SessionPaginator::clearPaginator($namespace);
+
         $this       
             ->field('namespace',$namespace);     
     }
