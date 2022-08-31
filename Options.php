@@ -61,14 +61,14 @@ class Options extends ControlPanelApiController
     }
 
     /**
-     * Get option
+     * Read option
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
      */
-    public function get($request, $response, $data) 
+    public function read($request, $response, $data) 
     {             
         $data
             ->addRule('exists:model=Options|field=key','key')
