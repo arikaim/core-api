@@ -40,10 +40,11 @@ class Relations extends ControlPanelApiController
         $data->validate(true);
 
         $model = Model::create($data['model'],$data['extension']);
-        if (\is_object($model) == false) {               
+        if ($model == null) {               
             $this->error('errors.relations.add');               
             return;
         }
+        
         if (empty($data['type']) == false && empty($data['relation_id']) == false) {
             $result = $model->deleteRelations($data['id'],$data['type'],$data['relation_id']);
         } else {
@@ -66,15 +67,20 @@ class Relations extends ControlPanelApiController
         $data->validate(true);
           
         $model = Model::create($data['model'],$data['extension']);
-        if (\is_object($model) == false) {
+        if ($model == null) {
             $this->error('errors.relations.add');
             return;
         }
 
         $model = $model->saveRelation($data['id'],$data['type'],$data['relation_id']);
-        $result = (\is_object($model) == true) ? true : $model;
+        if ($model === false) {
+            $this->error('errors.relations.add');
+            return;
+        }
 
-        $this->setResponse($result,'relations.add','errors.relations.add');
+        $this
+            ->message('relations.add')
+            ->field('uuid',$model->uuid);       
     }
 
     /**
@@ -90,12 +96,19 @@ class Relations extends ControlPanelApiController
         $data->validate(true);
 
         $model = Model::create($data['name'],$data['extension']);
-        $model = (is_object($model) == true) ? $model->findById($data['uuid']) : null;
+        if ($model == null) {
+            $this->error('errors.relations.add');
+            return;
+        }
 
-        $this->setResponse(is_object($model),function() use($model) {
-            $this
-                ->message('orm.read')
-                ->field('data',$model->toArray());                   
-        },'errors.orm.read');
+        $model = $model->findById($data['uuid']);
+        if ($model == null) {
+            $this->error('errors.relations.read');
+            return;
+        }
+        
+        $this
+            ->message('orm.read')
+            ->field('data',$model->toArray());                          
     }
 }
