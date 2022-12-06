@@ -81,7 +81,7 @@ class Packages extends ControlPanelApiController
         $packageManager = $this->get('packages')->create($type);
         $package = $packageManager->createPackage($name);
     
-        if (\is_object($package) == false) {
+        if ($package == null) {
             $this->error('errors.package.name');
             return;
         }
@@ -168,7 +168,7 @@ class Packages extends ControlPanelApiController
 
         $packageManager = $this->get('packages')->create($type);            
         $package = $packageManager->createPackage($name);
-        if (\is_object($package) == false) {
+        if ($package == null) {
             $this->error('errors.package.name');
             return;
         }
@@ -281,7 +281,7 @@ class Packages extends ControlPanelApiController
         $packageManager = $this->get('packages')->create($type);            
         
         $package = $packageManager->createPackage($name);
-        $result = (\is_object($package) == true) ? $package->setPrimary() : false;
+        $result = ($package != null) ? $package->setPrimary() : false;
         
         $this->setResponse($result,function() use($name,$type) {         
             $this

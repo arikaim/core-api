@@ -46,7 +46,7 @@ class Repository extends ControlPanelApiController
         $reposioryType = $data->get('repository_type',PackageManager::GITHUB_REPOSITORY);
 
         $packageManager = $this->get('packages')->create($type);
-        if (\is_object($packageManager) == false) {
+        if ($packageManager == null) {
             $this->error('Not valid package type.');
             return false;
         }
@@ -57,7 +57,7 @@ class Repository extends ControlPanelApiController
         if (empty($repository) == true) {               
             $repository = $packageManager->createRepository($reposioryName,$accessKey,$reposioryType);
         }
-        if (\is_object($repository) == false) {
+        if ($repository == null) {
             $this->error('Not valid package name or repository.');
             return false;
         }

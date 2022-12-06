@@ -44,7 +44,7 @@ class Options extends ControlPanelApiController
         $referenceId = $data->get('id');
         $model = Model::create($modelName,$extension);
         
-        $result = (\is_object($model) == true) ? $model->saveOptions($referenceId,$data['options']) : false;
+        $result = ($model != null) ? $model->saveOptions($referenceId,$data['options']) : false;
         
         $this->setResponse($result,function() use($model) {
             $this
