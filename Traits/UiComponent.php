@@ -19,12 +19,12 @@ trait UiComponent
      *
      * @param string $name
      * @param array $params
-     * @param string $language
+     * @param string|null $language
      * @param string|null $type
      * @param array $options
      * @return mixed 
      */
-    public function load(string $name, array $params = [], string $language, ?string $type = null, array $options = [])
+    public function load(string $name, array $params = [], ?string $language = null, ?string $type = null, array $options = [])
     {   
         $name = \urldecode($name);
         $component = $this->get('page')->renderHtmlComponent($name,$params,$language,$type);
