@@ -79,7 +79,7 @@ class Install extends ApiController
 
         $result = $install->createDb($this->get('config')->getByPath('db/database'));
 
-        $this->setResponse($result,'Db created successfully.','Error prepare install.');      
+        $this->setResponse($result,'Db created successfully.','Error create database.');      
     }
 
     /**
