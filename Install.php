@@ -260,7 +260,7 @@ class Install extends ApiController
     }
 
     /**
-     * Repair installation Arikaim 
+     * Repair Arikaim installation
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
@@ -286,6 +286,40 @@ class Install extends ApiController
         // clear cache
         $this->get('cache')->clear();
 
-        $this->setResponse($result,'Arikaim CMS repair installation successfully.','Repair installation error.');                  
+        $this->setResponse(
+            $result,
+            'Arikaim CMS repair installation successfully.',
+            'Repair installation error.'
+        );                  
+    }
+
+    /**
+     * Init files storage
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return Psr\Http\Message\ResponseInterface
+    */
+    public function initStorageController($request, $response, $data) 
+    {
+        $this->requireControlPanelPermission();
+
+        $data->validate(true);  
+
+        // clear cache
+        $this->get('cache')->clear();
+            
+        $install = new SystemInstall();
+        $result = $install->initStorage();   
+
+        // clear cache
+        $this->get('cache')->clear();
+
+        $this->setResponse(
+            $result,
+            'Arikaim CMS init storage successfully.',
+            'Init storage error.'
+        );                  
     }
 }

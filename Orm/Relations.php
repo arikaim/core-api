@@ -41,7 +41,7 @@ class Relations extends ControlPanelApiController
 
         $model = Model::create($data['model'],$data['extension']);
         if ($model == null) {               
-            $this->error('errors.relations.add');               
+            $this->error('errors.relations.add','Not valid model class or extension');               
             return;
         }
         
@@ -68,7 +68,7 @@ class Relations extends ControlPanelApiController
           
         $model = Model::create($data['model'],$data['extension']);
         if ($model == null) {
-            $this->error('errors.relations.add');
+            $this->error('errors.relations.add','Not valid model class or extension');
             return;
         }
 
