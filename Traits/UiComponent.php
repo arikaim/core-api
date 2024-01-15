@@ -33,9 +33,8 @@ trait UiComponent
             $errorCode = $component->getError();   
             if ($errorCode != 'NOT_VALID_COMPONENT') {
                 $this->setResultField('redirect',$component->getOption('redirect')); 
-            }
-            $error = $this->get('errors')->getError($errorCode,['full_component_name' => $name]);  
-            return $this->withError($error)->getResponse();          
+            }            
+            return $this->withError($errorCode)->getResponse();          
         }
       
         return $this->setResult([

@@ -35,8 +35,7 @@ class Component extends ApiController
         $component = $this->get('view')->createComponent($componentName,$language,'json');
 
         if ($component->hasError() == true) {
-            $error = $component->getError();            
-            $error = $this->get('errors')->getError($error['code'],['full_component_name' => $componentName]);                   
+            $error = $component->getError();                       
             return $this->withError($error)->getResponse();  
         }
         
@@ -62,9 +61,8 @@ class Component extends ApiController
        
         $component = $this->get('view')->createComponent($componentName,$language,$type);
     
-        if ($component->hasError() == true) {
-            $error = $component->getError();
-            return $this->withError($this->get('errors')->getError($error['code'],$error['params']))->getResponse();            
+        if ($component->hasError() == true) {          
+            return $this->withError($component->getError())->getResponse();            
         }
  
         return $this->setResult([
