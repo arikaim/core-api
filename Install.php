@@ -211,6 +211,9 @@ class Install extends ApiController
                 return $this->sendProgressResponse();       
             }
         );  
+
+        $install->changeStorageFolderOwner();
+        
         // clear cache
         $this->get('cache')->clear();
         $this->taskProgressEnd();
