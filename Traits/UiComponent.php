@@ -44,8 +44,8 @@ trait UiComponent
             'html'                => $component->getHtmlCode(),   
             'css'                 => [], 
             'js'                  => $this->get('page')->getComponentsFiles()['js'],                 
-            'components'          => $this->get('page')->getIncludedComponents(),
-            'component_instances' => $this->get('page')->getComponentInstances()                   
+            'components'          => \array_values($this->get('page')->getIncludedComponents()),
+            'component_instances' => \array_values($this->get('page')->getComponentInstances())                   
         ])->getResponse();        
     }
 
