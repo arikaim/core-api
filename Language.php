@@ -11,6 +11,8 @@ namespace Arikaim\Core\Api;
 
 use Arikaim\Core\Db\Model;
 use Arikaim\Core\Controllers\ControlPanelApiController;
+use Arikaim\Core\Http\Cookie;
+use Arikaim\Core\Http\Session;
 
 /**
  * Languages controller
@@ -186,7 +188,11 @@ class Language extends ControlPanelApiController
             ->addRule('exists:model=Language|field=code','language_code')
             ->validate(true);
 
-        $language = $data->get('language_code');         
+        $language = $data->get('language_code','en');       
+
+        Session::set('language',$language);
+        Cookie::add('language',$language);
+
         $this->get('page')->setLanguage($language);
 
         $this->field('language','language');
