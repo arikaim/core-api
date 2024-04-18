@@ -87,27 +87,33 @@ class UploadPackages extends ControlPanelApiController
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
      * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
+     * @return mixed
     */
     public function upload($request, $response, $data)
     {  
-        $data->validate(true);  
+        $data
+            ->validate(true);  
 
         $files = $this->uploadFiles($request,Path::STORAGE_TEMP_PATH,false);
+        $packageDir = null;
 
         // process uploaded files         
         foreach ($files as $item) {               
             if (empty($item['error']) == false) continue;
             $fileUploaded = $item['name'];
-            $destination = pathinfo($fileUploaded,PATHINFO_FILENAME); 
             if (File::getExtension($fileUploaded) == 'zip') {
                 // unzip 
-                $fileName = Path::STORAGE_TEMP_PATH . $fileUploaded;                   
-                ZipFile::extract($fileName,Path::STORAGE_TEMP_PATH . $destination);
+                $fileName = Path::STORAGE_TEMP_PATH . $fileUploaded;  
+                $packageDir = ZipFile::getItemPath($fileName,0);                   
+                ZipFile::extract($fileName,Path::STORAGE_TEMP_PATH);
                 break;
             }
         }
-        $packageDir = \pathinfo($fileName,PATHINFO_FILENAME); 
+       
+        if (empty($packageDir) == true) {
+            $this->error('errors.package.unzip');
+            return;
+        }
 
         $result = $this->get('storage')->has('temp/' . $packageDir);
         if ($result == false) {               
