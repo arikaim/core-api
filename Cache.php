@@ -5,7 +5,7 @@
  * @link        http://www.arikaim.com
  * @copyright   Copyright (c)  Konstantin Atanasov <info@arikaim.com>
  * @license     http://www.arikaim.com/license
- * 
+ * @package     CoreAPI
 */
 namespace Arikaim\Core\Api;
 
@@ -77,6 +77,7 @@ class Cache extends ControlPanelApiController
     public function disable($request, $response, $data)
     {
         $this->get('config')->setBooleanValue('settings/cache',false);
+        $this->get('config')->setValue('settings/cacheDriver','void');
         $result = $this->get('config')->save();
         
         $this->get('cache')->clear();
