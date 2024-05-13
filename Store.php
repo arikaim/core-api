@@ -29,6 +29,69 @@ class Store extends ControlPanelApiController
     }
 
     /**
+     * Login in store account
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return mixed
+     */
+    public function logout($request, $response, $data)
+    {
+        $store = new ArikaimStore();
+        $store->getConfig()->setValue('account/token',null);
+        // save and reload config file
+        $store->getConfig()->save();
+        $store->getConfig()->reloadConfig();
+        
+        $this
+            ->message('store.logout');
+    }
+
+    /**
+     * Login in store account
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return mixed
+     */
+    public function login($request, $response, $data)
+    {
+        $userName = $data->get('user_name');
+        $password = $data->get('password');
+        $store = new ArikaimStore();
+
+        $response = $this->get('http')->post(ArikaimStore::LOGIN_API_URL,[
+            'form_params' => [
+                'user_name' => $userName,
+                'password'  => $password 
+            ]           
+        ]);
+     
+        $callResult = new ApiResponse($response); 
+        if ($callResult->hasError() == true) {           
+            $this->error('errors.store.order');          
+            return false;
+        } 
+
+        $token = $callResult->getField('token');
+        if (empty($token) == true) {
+            $this->error('errors.store.login');
+            return false;
+        }
+
+        $store->getConfig()->setValue('account/token',$token);
+        // save and reload config file
+        $store->getConfig()->save();
+        $store->getConfig()->reloadConfig();
+
+        $this
+            ->message('store.login')
+            ->field('token',$token);                           
+    }
+
+    /**
      * Save product order 
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
