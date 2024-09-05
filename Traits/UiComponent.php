@@ -33,13 +33,13 @@ trait UiComponent
             $component->setError('RENDER_COMPONENT_ERROR');
         }
     
-        if ($component->hasError() == true) {
-            $errorCode = $component->getError();              
-          
+        $errorCode = ($component->hasError() == true) ? $component->getError() : $this->get('page')->getError();
+        
+        if (empty($errorCode) == false) {
             if ($errorCode == 'ACCESS_DENIED') {
                 $options = $component->getOptions();
-                $this->setResultField('redirect',($options['redirect'] ?? null)); 
-                $this->setResultField('reload',($options['reload'] ?? false)); 
+                $this->setResultField('redirect',($options['access']['redirect'] ?? null)); 
+                $this->setResultField('reload',($options['access']['reload'] ?? false)); 
             }            
            
             return $this->withError($errorCode)->getResponse();          
