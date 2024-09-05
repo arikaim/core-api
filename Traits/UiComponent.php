@@ -27,13 +27,21 @@ trait UiComponent
     public function load(string $name, array $params = [], ?string $language = null, ?string $type = null, array $options = [])
     {   
         $name = \urldecode($name);
-        $component = $this->get('page')->renderHtmlComponent($name,$params,$language,$type);
-     
+        try {
+            $component = $this->get('page')->renderHtmlComponent($name,$params,$language,$type);
+        } catch (\Exception $e) {
+            $component->setError('RENDER_COMPONENT_ERROR');
+        }
+    
         if ($component->hasError() == true) {
-            $errorCode = $component->getError();   
-            if ($errorCode != 'NOT_VALID_COMPONENT') {
-                $this->setResultField('redirect',$component->getOption('redirect')); 
+            $errorCode = $component->getError();              
+          
+            if ($errorCode == 'ACCESS_DENIED') {
+                $options = $component->getOptions();
+                $this->setResultField('redirect',($options['redirect'] ?? null)); 
+                $this->setResultField('reload',($options['reload'] ?? false)); 
             }            
+           
             return $this->withError($errorCode)->getResponse();          
         }
       
