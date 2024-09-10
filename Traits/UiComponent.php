@@ -36,11 +36,14 @@ trait UiComponent
         $errorCode = ($component->hasError() == true) ? $component->getError() : $this->get('page')->getError();
         
         if (empty($errorCode) == false) {
+            $options = $component->getOptions();
             if ($errorCode == 'ACCESS_DENIED') {
-                $options = $component->getOptions();
                 $this->setResultField('redirect',($options['access']['redirect'] ?? null)); 
-                $this->setResultField('reload',($options['access']['reload'] ?? false)); 
-            }            
+                $this->setResultField('reload',($options['access']['reload'] ?? true)); 
+            } else {
+                $this->setResultField('redirect',null); 
+                $this->setResultField('reload',false); 
+            }        
            
             return $this->withError($errorCode)->getResponse();          
         }
