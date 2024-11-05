@@ -30,7 +30,8 @@ trait UiComponent
         try {
             $component = $this->get('page')->renderHtmlComponent($name,$params,$language,$type);
         } catch (\Exception $e) {
-            $component->setError('RENDER_COMPONENT_ERROR');
+            $component = $this->get('view')->renderComponentError($name,$language,'RENDER_COMPONENT_ERROR');
+            $component->setError($e->getMessage() . ' line: ' . $e->getLine() . ' file: ' . $e->getFile());
         }
     
         $errorCode = ($component->hasError() == true) ? $component->getError() : $this->get('page')->getError();
